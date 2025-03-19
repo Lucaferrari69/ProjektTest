@@ -321,8 +321,8 @@
 
                     Console.ReadKey(); // Venter på tastetryk
 
-                    x++; // Øg tælleren (x)
-                    y = a * x; // Beregn y(x) = a * x for at vise de næste linjer
+                    x++; //øger x med 1
+                    y = a * x; //beregner y(x) = a * x for at vise de næste linjer
                     Console.Clear();
                 }
 
@@ -350,28 +350,28 @@
             string søg = Console.ReadLine();
             using (StreamReader Fillæser = new StreamReader(databaseFil))
             {
-                string line;
-                while ((line = Fillæser.ReadLine()) != null) //så længe antallet af linjer i filen ikke er 0
+                string linje;
+                while ((linje = Fillæser.ReadLine()) != null) //så længe antallet af linjer i filen ikke er 0
                 {
-                    string[] felter = line.Split(',');//array felter til at opdele hver linje i separate elementer  
+                    string[] felter = linje.Split(',');//array felter til at opdele hver linje i separate elementer  
                     foreach (string felt in felter)//for hvert felt i arrayet felter
                     {
                         if (felt.Contains(søg)) //hvis felt indeholder søgeord
                         {
-                            Console.WriteLine(line);
+                            Console.WriteLine(linje);
                         }
                     }
                 }
             }
         }
 
-        // Metode til at opdatere informationer om en person.
+        //metode til at opdatere informationer om en person i database-filen.
         static void Opdater()
         {
-            List<string> lines = new List<string>();
+            List<string> linjer = new List<string>();
             Console.WriteLine("Indtast telefonnummer på den du vil opdatere.");
             Console.Write("Telefonnummer: ");
-            string tlf = Console.ReadLine();
+            byte tlf = Convert.ToByte(Console.ReadLine());
             Console.WriteLine("Indtast personens nye fulde navn.");
             Console.Write("Navn: ");
             string navn = Console.ReadLine();
@@ -380,26 +380,26 @@
             string adresse = Console.ReadLine();
             using (StreamReader Fillæser = new StreamReader(databaseFil))
             {
-                string line;
-                while ((line = Fillæser.ReadLine()) != null)
+                string linje;
+                while ((linje = Fillæser.ReadLine()) != null) //læser en linje i filen, så længe der er linjer
                 {
-                    var felter = line.Split(',');
-                    if (felter[0] == tlf)
+                    var felter = linje.Split(','); //skiller linjen ved kommaer, lav til elementer i array
+                    if (felter[0] == Convert.ToString(tlf)) //hvis næste linjen starter med  intastet tlfnr
                     {
-                        lines.Add($"{tlf},{navn},{adresse}");
+                        linjer.Add($"{tlf},{navn},{adresse}"); //opdater linjen med nye indtastninger
                     }
-                    else
+                    else //hvis det var sidste linje 
                     {
-                        lines.Add(line);
+                        linjer.Add(linje); //lad linjen være som den er 
                     }
                 }
             }
 
             using (StreamWriter Filskriver = new StreamWriter(databaseFil, false))
             {
-                foreach (var l in lines)
+                foreach (var l in linjer)
                 {
-                    Filskriver.WriteLine(l);
+                    Filskriver.WriteLine(l); //skriver de opdaterede linjer i filen
                 }
             }
             Console.WriteLine("Bruger opdateret!");
