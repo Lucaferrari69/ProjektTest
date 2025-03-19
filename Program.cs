@@ -32,7 +32,7 @@
 
         static void Main(string[] args)
         {
-            //deklarerer variabler og tildeler værdier
+            //deklarerer og initialiserer variabler
             string menuValg, brugerNavn, adgangsKode, systemBruger = "CMIS", systemKode = "PASSWORD";
 
             //boolean(true/false) - værdi, der styrer om menuen skal fortsætte eller ej
@@ -249,7 +249,7 @@
                                           MEN SÅ SKAL VI OGSÅ KODE OS UD AF, HVIS MAN SKRIVER KOMMA ALLIGEVEL ***************/
 
                         //betingelse: arrayet har 1 eller flere elementer og første element er det samme som indtastning til tlfnr
-                        if (dele.Length >= 1 && dele[0] == tlf)
+                        if (dele.Length >= 1 && dele[0] == Convert.ToString(tlf))
                         {
                             //altså hvis tlf-nummeret allerede eksisterer i filen
                             tjekNr += 1; //lægger 1 til variablens værdi
@@ -319,7 +319,7 @@
                     Console.Write($"\n\nViser index {x + 1} til {y + a}\n" +
                         "Tryk på [Enter] for at vise flere");
 
-                    Console.ReadKey(); // Venter på tastetryk
+                    Console.ReadKey(); //venter på tastetryk
 
                     x++; //øger x med 1
                     y = a * x; //beregner y(x) = a * x for at vise de næste linjer
@@ -368,10 +368,10 @@
         //metode til at opdatere informationer om en person i database-filen.
         static void Opdater()
         {
-            List<string> linjer = new List<string>();
+            List<string> linjer = new List<string>(); //liste - som array, men uden fordefineret antal elementer
             Console.WriteLine("Indtast telefonnummer på den du vil opdatere.");
             Console.Write("Telefonnummer: ");
-            byte tlf = Convert.ToByte(Console.ReadLine());
+            string tlf = Console.ReadLine();
             Console.WriteLine("Indtast personens nye fulde navn.");
             Console.Write("Navn: ");
             string navn = Console.ReadLine();
@@ -384,7 +384,7 @@
                 while ((linje = Fillæser.ReadLine()) != null) //læser en linje i filen, så længe der er linjer
                 {
                     var felter = linje.Split(','); //skiller linjen ved kommaer, lav til elementer i array
-                    if (felter[0] == Convert.ToString(tlf)) //hvis næste linjen starter med  intastet tlfnr
+                    if (felter[0] == tlf) //hvis næste linjen starter med  intastet tlfnr
                     {
                         linjer.Add($"{tlf},{navn},{adresse}"); //opdater linjen med nye indtastninger
                     }
