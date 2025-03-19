@@ -2,7 +2,7 @@
 {
     internal class Program /********HUSK AT OMDØBE PROGRAM**********/
     {
-        /*Denne kode er skrevet af Luca, redigeret og kommenteret af Vaike*/
+        /*Denne kode er skrevet ae*/
 
         //string-variablen "databaseFil" - definerer/indeholder lokal sti til Database.txt
         static string databaseFil = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Database.txt");
@@ -62,7 +62,7 @@
 
                 //titel på konsolvinduet
                 Console.Title = "CMIS - Informationsstander";
-                 
+
                 //udskriver menu til skærm, laver linjeskift
                 Console.Write("\nVelkommen til CMIS.\nHer kan du tilmelde dig til vores nyhedsbrev! \n" +
                     "────────── [ MENU ] ────────── \n" +
@@ -74,6 +74,7 @@
                 Console.ForegroundColor = ConsoleColor.Gray; //indstiller tekstfarve
 
                 Console.Write("[4] ■ Login - Admin");
+
                 Console.ForegroundColor = ConsoleColor.Black; //indstiller tekstfarve
 
                 Console.Write("\n\n──────────────────────────────\n\n" +
@@ -172,8 +173,8 @@
                                         break;
 
                                     case 4:
-                                        //kalder metoden Update
-                                        Update();
+                                        //kalder metoden Opdater
+                                        Opdater();
                                         break;
 
                                     case 5:
@@ -261,27 +262,30 @@
                     }
                 }
 
-                if (tjekNr > 0) //hvis tjekNr er mere end 0
+                if (tjekNr > 0) //hvis nummer findes (tjekNr er mere end 0)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkRed; //indstiller skriftfarve
                     Console.WriteLine("FEJL: Telefonnummeret findes allerede.");
+                    Console.ForegroundColor = ConsoleColor.Black;
 
                     //venter på tastetryk
                     Console.ReadKey();
                 }
-                else //hvis tjekNr ikke er mere end 0
+                else //hvis nummer IKKE findes (tjekNr ikke er mere end 0)
                 {
                     Console.Write("Indtast din adresse\n" +
                         "Adresse: ");
                     string adresse = Console.ReadLine();
 
                     //skriv til filen, hvis telefonnummeret ikke er der
-                    using (StreamWriter writer = new StreamWriter(databaseFil, true))
+                    using (StreamWriter Filskriver = new StreamWriter(databaseFil, true))
                     {
-                        writer.WriteLine($"{tlf},{navn},{adresse}");
+                        Filskriver.WriteLine($"{tlf},{navn},{adresse}");
                     }
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Tak for din tilmelding! Vi glæder os til at holde dig opdateret");
+                    Console.ForegroundColor = ConsoleColor.Black;
+
                     //venter på tastetryk
                     Console.ReadKey();
                 }
@@ -291,26 +295,63 @@
         //metode til at læse og udskrive indhold i database-fil
         static void ReadAll()
         {
-            using (StreamReader reader = new StreamReader(databaseFil))
+            if (File.Exists(databaseFil)) //hvis fil eksisterer, kør kode
             {
-                string line;
-                while ((line = reader.ReadLine()) != null) //så længe der er indhold i filen
+                //string-array linjer - læser filens indhold og smider hver linje i filen ind i array som et element
+                string[] linjer = File.ReadAllLines(databaseFil);
+
+                //initialiserer variabler til matematisk funktion, hvor y er en funktion af x    -    f(x) = a * x 
+                int a = 14, x = 0, y = a * x;
+                /* a= antal linjer der skrives, x = "side", y= første linje pr side /element i array*/
+
+                Console.WriteLine("Viser alle modtagere af nyhedsbrevet. Der vises 14 tilmeldte ad gangen");
+
+                /*************************** TEST ET ANTAL DER GÅR OP I 14 *********************************/
+                while (y < linjer.Length && linjer.Length > 12) //så længe der er linjer tilbage i filen
                 {
-                    Console.WriteLine(line);
+                    //vis elementerne fra y til y + a, men ikke mere end linjer.Length
+                    for (int i = y; i < y + a && i < linjer.Length; i++) // Tjekker, så vi ikke går ud over antallet af linjer i filen
+                    {
+                        Console.WriteLine(linjer[i]); //skriv element nr i til skærm
+                    }
+
+                    //skriver til skærm
+                    Console.Write($"\n\nViser index {x + 1} til {y + a}\n" +
+                        "Tryk på [Enter] for at vise flere");
+
+                    Console.ReadKey(); // Venter på tastetryk
+
+                    x++; // Øg tælleren (x)
+                    y = a * x; // Beregn y(x) = a * x for at vise de næste linjer
+                    Console.Clear();
                 }
+
+                Console.WriteLine("\nDer er ikke mere at vise");
+                /*************************** TEST ET ANTAL DER GÅR OP I 14 *********************************/
+
+                /* DETALJERET FORKLARING:
+               
+               a - konstant: 14. antallet af linjer, der skal skrives til skærmen ad gangen.
+               x - uafhængig variabel. tæller allet af "hop" i visningen/hvor mange gange er der blevet vist 14 linjer.
+               y - afhængig (af x) variabel. linjenummeret på den første linje, der skrives til skærmen i "hoppet"
+               x initialiseres til 0, og derfor starter vi med linje 1 (element 0 i array), fordi:
+               y(0) = 14 * 0 = 0 - derefter øges x med 1 (hver gang der er skrevet 14 linjer), så:
+               y(1) = 14 * 1 = 14 - næste "side" starter med element 14 i array (line 15 i fil), derefter
+               y(2) = 14 * 2 = 28 - element 28/linje 29     */
+
             }
         }
 
-        //metode til at søge efter personer, der matcher søgning (søgeord).
+        //metode til at søge efter personer, der matcher søgeord.
         static void Read()
         {
             Console.WriteLine("Indtast hvad du søger efter");
             Console.Write("Søg: ");
             string søg = Console.ReadLine();
-            using (StreamReader reader = new StreamReader(databaseFil))
+            using (StreamReader Fillæser = new StreamReader(databaseFil))
             {
                 string line;
-                while ((line = reader.ReadLine()) != null) //så længe antallet af linjer i filen ikke er 0
+                while ((line = Fillæser.ReadLine()) != null) //så længe antallet af linjer i filen ikke er 0
                 {
                     string[] felter = line.Split(',');//array felter til at opdele hver linje i separate elementer  
                     foreach (string felt in felter)//for hvert felt i arrayet felter
@@ -325,7 +366,7 @@
         }
 
         // Metode til at opdatere informationer om en person.
-        static void Update()
+        static void Opdater()
         {
             List<string> lines = new List<string>();
             Console.WriteLine("Indtast telefonnummer på den du vil opdatere.");
@@ -337,10 +378,10 @@
             Console.WriteLine("Indtast personens adresse.");
             Console.Write("Adresse: ");
             string adresse = Console.ReadLine();
-            using (StreamReader reader = new StreamReader(databaseFil))
+            using (StreamReader Fillæser = new StreamReader(databaseFil))
             {
                 string line;
-                while ((line = reader.ReadLine()) != null)
+                while ((line = Fillæser.ReadLine()) != null)
                 {
                     var felter = line.Split(',');
                     if (felter[0] == tlf)
@@ -354,11 +395,11 @@
                 }
             }
 
-            using (StreamWriter writer = new StreamWriter(databaseFil, false))
+            using (StreamWriter Filskriver = new StreamWriter(databaseFil, false))
             {
                 foreach (var l in lines)
                 {
-                    writer.WriteLine(l);
+                    Filskriver.WriteLine(l);
                 }
             }
             Console.WriteLine("Bruger opdateret!");
@@ -371,10 +412,10 @@
             Console.WriteLine("Indtast telefonnummer på den du vil slette.");
             Console.Write("Telefonnummer: ");
             string tlf = Console.ReadLine();
-            using (StreamReader reader = new StreamReader(databaseFil))
+            using (StreamReader Fillæser = new StreamReader(databaseFil))
             {
                 string line;
-                while ((line = reader.ReadLine()) != null)
+                while ((line = Fillæser.ReadLine()) != null)
                 {
                     var felter = line.Split(',');
                     if (felter[0] != tlf)
@@ -384,11 +425,11 @@
                 }
             }
 
-            using (StreamWriter writer = new StreamWriter(databaseFil, false))
+            using (StreamWriter Filskriver = new StreamWriter(databaseFil, false))
             {
                 foreach (var l in lines)
                 {
-                    writer.WriteLine(l);
+                    Filskriver.WriteLine(l);
                 }
             }
             Console.WriteLine("Bruger fjernet");
