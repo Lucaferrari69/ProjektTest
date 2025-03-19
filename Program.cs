@@ -62,7 +62,7 @@
 
                 //titel på konsolvinduet
                 Console.Title = "CMIS - Informationsstander";
-
+                 
                 //udskriver menu til skærm, laver linjeskift
                 Console.Write("\nVelkommen til CMIS.\nHer kan du tilmelde dig til vores nyhedsbrev! \n" +
                     "────────── [ MENU ] ────────── \n" +
