@@ -36,7 +36,7 @@
             string menuValg, brugerNavn, adgangsKode, systemBruger = "CMIS", systemKode = "PASSWORD";
 
             //boolean(true/false) - værdi, der styrer om menuen skal fortsætte eller ej
-            bool fortsætMenu = true; //true: fortsæt menuen
+            bool fortsætProgram = true; //true: fortsæt menuen
 
             //if-betingelse: hvis filen ikke eksisterer køres koden i curly-brackets
             if (!File.Exists(databaseFil))
@@ -52,7 +52,7 @@
                             at holde den åben - vi tager altså "fingrene ud af kagedåsen" og undgår
                             at filen bliver lukket forkert eller tilgået flere steder fra samtidigt*/
             }
-            bool programKører = true; //
+            bool adminMenu = true; //
 
             do //starter do-while løkke 1, som styrer hele programmet
             {
@@ -64,12 +64,13 @@
                 Console.Title = "CMIS - Informationsstander";
 
                 //udskriver menu til skærm, laver linjeskift
-                Console.Write("\nVelkommen til CMIS.\nHer kan du tilmelde dig til vores nyhedsbrev! \n" +
+                Console.Write("\nVelkommen til CMIS.\nHer kan du tilmelde dig til vores nyhedsbrev! \n\n" +
                     "────────── [ MENU ] ────────── \n" +
                     "Indtast en af de nedstående typer. (f.eks. 1, 2, 3 eller 4)\n\n" +
                     "[1] ■ Tilmeld nyhedsbrev - hver måned.\n\n" +
                     "[2] ■ Tilmeld nyhedsbrev - hver tredje måned.\n\n" +
                     "[3] ■ Tilmeld nyhedsbrev - hvert år.\n\n");
+                
 
                 Console.ForegroundColor = ConsoleColor.Gray; //indstiller tekstfarve
 
@@ -104,9 +105,9 @@
                         Create();
                         break;
 
-                    case "4":
+                   case "4":
                         Console.Title = "LOGIN"; //indstiller titel på konsol-vindue
-                        fortsætMenu = false; //afslutter menuen
+                        fortsætProgram = false; //afslutter menuen
                         Console.Clear(); //renser skærmen
 
                         //udskriver til skærm, lavindsætter linjeskift
@@ -115,11 +116,13 @@
                             "[PASSWORD] : ");
 
                         //flytter curseren
-                        Console.SetCursorPosition(13, 3);
+                                                Console.SetCursorPosition(13, 3);
                         //tildeler værdi til variabler, konverterer til uppercase
                         brugerNavn = Console.ReadLine().ToUpper();
                         Console.SetCursorPosition(13, 5);
+                        Console.ForegroundColor = ConsoleColor.White;
                         adgangsKode = Console.ReadLine().ToUpper();
+                        Console.ForegroundColor = ConsoleColor.Black;
 
                         //if-statement: betingelse tjekker om indtastning stemmer med systemets admin-loginoplysninger
                         if (adgangsKode == systemKode && brugerNavn == systemBruger)
@@ -127,13 +130,13 @@
                             //hvis login er rigtig, kør kode
                             System.Threading.Thread.Sleep(1000); //pauser program i 1 sekund
                             Console.Clear(); //renser skærm
-                            Console.WriteLine("Logger ind.");
+                            Console.WriteLine("\n\n\n       * Logger ind *");
                             System.Threading.Thread.Sleep(500);
                             Console.Clear();
-                            Console.WriteLine("Logger ind..");
+                            Console.WriteLine("\n\n\n     * * Logger ind * *");
                             System.Threading.Thread.Sleep(300);
                             Console.Clear();
-                            Console.WriteLine("Logger ind...");
+                            Console.WriteLine("\n\n\n   * * * Logger ind * * *");
                             System.Threading.Thread.Sleep(800);
                             Console.Clear();
 
@@ -141,13 +144,17 @@
                             do
                             {
                                 Console.Clear();
-                                Console.WriteLine("Admin Panel\n");
-                                Console.WriteLine("[1] Opret" +
-                                    "\n[2] Se alle" +
-                                    "\n[3] Søg" +
-                                    "\n[4] Opdater" +
-                                    "\n[5] Slet" +
-                                    "\n[0] Log ud");
+                                Console.Title = "ADMINPANEL";
+                                //udskriver menu til skærm, laver linjeskift
+                                Console.Write("\nAdministratorpanel \n\n\n" +
+                                    "────────── [ MENU ] ────────── \n" +
+                                    "\n[1] ■ Opret" +
+                                    "\n\n[2] ■ Se alle" +
+                                    "\n\n[3] ■ Søg" +
+                                    "\n\n[4] ■ Log ud");
+
+                                Console.Write("\n\n──────────────────────────────\n\n" +
+                            "Valg: ");
                                 //læser indtastning, forsøger at konvertere til int, opretter & tildeler værdi til variabel
                                 int.TryParse(Console.ReadLine(), out int adminPanel);
 
@@ -171,21 +178,13 @@
                                         //kalder metoden Read
                                         Read();
                                         break;
-
+                                                                           
                                     case 4:
-                                        //kalder metoden Opdater
-                                        Opdater();
-                                        break;
-
-                                    case 5:
-                                        //kalder metoden Delete
-                                        Delete();
-                                        break;
-
-                                    case 0:
-                                        Console.Write("Tryk på en tast for at vende tilbage til menuen\n");
-                                        programKører = false; //ændrer bool til false, 
-                                        fortsætMenu = true; //ændrer bool til true, hopper tilbage til menu
+                                        Console.Title = "LOGOUT";
+                                        Console.WriteLine("\nLogget ud.\n\n" +
+                                            "Tryk på en tast for at vende tilbage til menuen\n");
+                                        adminMenu = false; //ændrer bool til false, 
+                                        fortsætProgram = true; //ændrer bool til true, hopper tilbage til menu
                                         break;
 
                                     default:
@@ -193,8 +192,8 @@
                                             "Tryk på en tast for at vende tilbage");
                                         break;
                                 }
-                                Console.ReadKey();
-                            } while (programKører); //slutter do-while løkke 2, som styrer admin-panel switch-case
+                                
+                            } while (adminMenu); //slutter do-while løkke 2, som styrer admin-panel switch-case
 
                             /****************************************** TJEK OG RET BOOLS TIL RETVISENDE NAVNE *************************************/
                         }
@@ -204,14 +203,17 @@
                             Console.WriteLine("\nAdgang nægtet\n" +
                                 "Vender tilbage til menuen om 3 sekunder");
                             System.Threading.Thread.Sleep(3000); //pauser programmet i 3sek
-                            fortsætMenu = true; //hopper tilbage til menu-skærm
+                            fortsætProgram = true; //hopper tilbage til menu-skærm
                             break;
                         }
                         break;
                 }
-            } while (fortsætMenu); // slutter do-while løkke 1, som styrer hele programmet.
+            } while (fortsætProgram); // slutter do-while løkke 1, som styrer hele programmet.
 
-            /****************************************** TJEK OG RET BOOLS TIL RETVISENDE NAVNE *************************************/
+            
+
+            
+            /****************************************** TJEK BREAK  *************************************/
 
             // metode til at oprette en person i databasen
             static void Create() //void betyder, at metoden ikke returnerer en værdi
@@ -249,7 +251,7 @@
                                           MEN SÅ SKAL VI OGSÅ KODE OS UD AF, HVIS MAN SKRIVER KOMMA ALLIGEVEL ***************/
 
                         //betingelse: arrayet har 1 eller flere elementer og første element er det samme som indtastning til tlfnr
-                        if (dele.Length >= 1 && dele[0] == Convert.ToString(tlf))
+                        if (dele.Length >= 1 && dele[0] == tlf)
                         {
                             //altså hvis tlf-nummeret allerede eksisterer i filen
                             tjekNr += 1; //lægger 1 til variablens værdi
@@ -365,75 +367,7 @@
             }
         }
 
-        //metode til at opdatere informationer om en person i database-filen.
-        static void Opdater()
-        {
-            List<string> linjer = new List<string>(); //liste - som array, men uden fordefineret antal elementer
-            Console.WriteLine("Indtast telefonnummer på den du vil opdatere.");
-            Console.Write("Telefonnummer: ");
-            string tlf = Console.ReadLine();
-            Console.WriteLine("Indtast personens nye fulde navn.");
-            Console.Write("Navn: ");
-            string navn = Console.ReadLine();
-            Console.WriteLine("Indtast personens adresse.");
-            Console.Write("Adresse: ");
-            string adresse = Console.ReadLine();
-            using (StreamReader Fillæser = new StreamReader(databaseFil))
-            {
-                string linje;
-                while ((linje = Fillæser.ReadLine()) != null) //læser en linje i filen, så længe der er linjer
-                {
-                    var felter = linje.Split(','); //skiller linjen ved kommaer, lav til elementer i array
-                    if (felter[0] == tlf) //hvis næste linjen starter med  intastet tlfnr
-                    {
-                        linjer.Add($"{tlf},{navn},{adresse}"); //opdater linjen med nye indtastninger
-                    }
-                    else //hvis det var sidste linje 
-                    {
-                        linjer.Add(linje); //lad linjen være som den er 
-                    }
-                }
-            }
-
-            using (StreamWriter Filskriver = new StreamWriter(databaseFil, false))
-            {
-                foreach (var l in linjer)
-                {
-                    Filskriver.WriteLine(l); //skriver de opdaterede linjer i filen
-                }
-            }
-            Console.WriteLine("Bruger opdateret!");
-        }
-
-        // Metode til at slette en person.
-        static void Delete()
-        {
-            List<string> lines = new List<string>();
-            Console.WriteLine("Indtast telefonnummer på den du vil slette.");
-            Console.Write("Telefonnummer: ");
-            string tlf = Console.ReadLine();
-            using (StreamReader Fillæser = new StreamReader(databaseFil))
-            {
-                string line;
-                while ((line = Fillæser.ReadLine()) != null)
-                {
-                    var felter = line.Split(',');
-                    if (felter[0] != tlf)
-                    {
-                        lines.Add(line);
-                    }
-                }
-            }
-
-            using (StreamWriter Filskriver = new StreamWriter(databaseFil, false))
-            {
-                foreach (var l in lines)
-                {
-                    Filskriver.WriteLine(l);
-                }
-            }
-            Console.WriteLine("Bruger fjernet");
-        }
+        
     }
 }
 
